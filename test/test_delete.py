@@ -13,3 +13,8 @@ class TestDeleteListing:
             f"ответ сервера: {response.text}"
         )
 
+        response_data = response.json()
+        assert "message" in response_data, f"В ответе отсутствует ключ 'message': {response_data}"
+        assert "deleted" in response_data["message"].lower() or response_data["message"] != ""
+
+
