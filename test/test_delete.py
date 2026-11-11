@@ -14,7 +14,8 @@ class TestDeleteListing:
         )
 
         response_data = response.json()
-        assert "message" in response_data, f"В ответе отсутствует ключ 'message': {response_data}"
-        assert "deleted" in response_data["message"].lower() or response_data["message"] != ""
+        assert response_data == {"message": "Объявление удалено успешно"}, (
+            f"Неожиданный ответ при удалении: {response_data}"
+        )
 
 
