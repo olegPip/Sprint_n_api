@@ -9,14 +9,23 @@ class TestEditListing:
     def test_successful_field_editing(self, user_token, created_listing_id):
         """Успешное редактирование полей объявления его создателем."""
         response = ListingsAPI.edit_listing(user_token, created_listing_id, UPDATED_LISTING_DATA)
-
         assert response.status_code == 200
 
-    def test_edit_listing_by_another_user_fails(self, secondary_user_token, created_listing_id):
-        """Ошибка авторизации при попытке изменить чужого объявление другим пользователем."""
-        response = ListingsAPI.edit_listing(secondary_user_token, created_listing_id, UPDATED_LISTING_DATA)
+        response_data = response.json()
+        assert response_data["id"] == created_listing_id
+        for key, expected_value in UPDATED_LISTING_DATA.items():
+            assert response_data.get(key) == expected_value, (
+                f"Поле '{key}' не обновилось: ожидалось {expected_value}, получено {response_data.get(key)}"
+            )
 
+    def test_edit_listing_by_another_user_fails(self, secondary_user_token, created_listing_id):
+        """Ошибка авторизации при попытке изменить чужое объявление другим пользователем."""
+        response = ListingsAPI.edit_listing(secondary_user_token, created_listing_id, UPDATED_LISTING_DATA)
         assert response.status_code == 401
+
+        response_data = response.json()
+        assert "message" in response_data or "detail" in response_data
+        assert response_data.get("message") or response_data.get("detail")
 
 
 
