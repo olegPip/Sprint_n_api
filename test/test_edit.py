@@ -24,8 +24,9 @@ class TestEditListing:
         assert response.status_code == 401
 
         response_data = response.json()
-        assert "message" in response_data or "detail" in response_data
-        assert response_data.get("message") or response_data.get("detail")
+        assert response_data["message"] == "Оффер не найден или у вас нет прав на его редактирование"
+        assert response_data["error"] == "Unauthorized"
+        assert response_data["statusCode"] == 401
 
 
 

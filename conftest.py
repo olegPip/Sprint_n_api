@@ -15,7 +15,7 @@ def registered_user():
 def user_token(registered_user):
     """Авторизует пользователя и возвращает его Bearer-токен."""
     response = AuthAPI.login_user(registered_user["email"], registered_user["password"])
-    return response.json().get("access_token") or response.json().get("token")
+    return response.json()["token"]
 
 @pytest.fixture
 def secondary_user_token():
@@ -23,7 +23,7 @@ def secondary_user_token():
     email = generate_unique_email()
     AuthAPI.register_user(email, DEFAULT_PASSWORD, "SecondaryUser")
     response = AuthAPI.login_user(email, DEFAULT_PASSWORD)
-    return response.json().get("access_token") or response.json().get("token")
+    return response.json()["token"]
 
 @pytest.fixture
 def created_listing_id(user_token):
